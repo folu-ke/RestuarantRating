@@ -2,7 +2,7 @@ package project2;
 import java.util.ArrayList;
 
 
-public class Restaurant {
+public class Restaurant implements Comparable<Restaurant>{
 	private String name, zip, address, phone;
 	private ArrayList<Inspection> listInspection = new ArrayList<Inspection> ();
 	/**
@@ -43,8 +43,50 @@ public class Restaurant {
 	 * This method is used to add inspections to a restaurant instance.
 	 * @param inspection 
 	 */
-	public void addInspection(Inspection inspection) {
+	public void addInspection(Inspection inspection) throws IllegalArgumentException {
+		if (inspection == null) { throw new IllegalArgumentException("Inspection must not be null."); }
 		listInspection.add(inspection);
+	}
+	@Override
+	/**
+	 *
+	 */
+	public int compareTo(Restaurant anotherRestaurant) {
+		int nameComparison = this.name.compareToIgnoreCase(anotherRestaurant.getName());
+		int zipComparison = this.zip.compareToIgnoreCase(anotherRestaurant.getZip());
+		if (nameComparison == 0) { return zipComparison; }
+		else { return zipComparison; }
+	}
+	@Override
+	/**
+	 *
+	 */
+	public boolean equals (Object object) {
+//		if (this == obj)
+//			return true;
+//		if (obj == null)
+//			return false;
+//		if (!(obj instanceof Color))
+//			return false;
+//		Color other = (Color) obj;
+//		if (hexValue == null) {
+//			if (other.hexValue != null)
+//				return false;
+//		}
+//			else if (!hexValue.equalsIgnoreCase(other.hexValue))
+//				return false;
+//			return true;
+//		}
+//		
+		return false;	
+	}
+	@Override
+	/**
+	 * This function prints the restaurant object in this format:
+	 * 
+	 */
+	public String toString () {
+		return "";
 	}
 	/**
 	 * @return name of the restaurant
