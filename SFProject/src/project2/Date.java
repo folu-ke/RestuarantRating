@@ -1,12 +1,11 @@
 package project2;
 import java.lang.String;
-import java.util.ArrayList;
+
 /**
  * The Date class allows input as a string in the formats MM/DD/YYYY or MM/DD/YY
  * or as date parameters (month, day, year). 
- * Throws 
  * @author  Mofoluwake Adesanya
- * @version 10/3/2023
+ * @version 10/31/2023
  */
 public class Date implements Comparable<Date>{
 	// fields for saving parts of the date
@@ -14,7 +13,7 @@ public class Date implements Comparable<Date>{
 	// Error message
 	private String errorMessage = "This date is not valid.";
 	/**
-	 * This constructor takes a date string and matches it to the
+	 * Constructs a date string and matches it to the
 	 * regular expressions MM/DD/YY or MM/DD/YYYY. A valid date must match the given regexes.
 	 * The valid values for each part of the date are: month : 1 - 12 (inclusive);
 	 * day : 1 to [31 for January, March, May, July, August, October and December,
@@ -24,12 +23,12 @@ public class Date implements Comparable<Date>{
 	 * does not affect the date because the date would always be printed 
 	 * in MM/DD/YYYY form.
 	 * @param String date 
-	 * @throws IllegalArgumentException if values are invalid.
+	 * @throws IllegalArgumentException if date values are invalid.
 	 */
-	public Date( String date ) throws IllegalArgumentException {
+ 	public Date( String date ) throws IllegalArgumentException {
 		// split to extract parts of the date
-		String dateRegexA = "[0-1][1-2]/[0-3][0-9]/[0-2][0-9]"; 	// year is of YY format
-		String dateRegexB = "[0-1][1-2]/[0-3][0-9]/20[0-2][0-9]";	// year is of YYYY format
+		String dateRegexA = "[0-1][0-9]/[0-3][0-9]/[0-2][0-9]"; 	// year is of YY format
+		String dateRegexB = "[0-1][0-9]/[0-3][0-9]/20[0-2][0-9]";	// year is of YYYY format
 		if ( date.matches(dateRegexA) || date.matches(dateRegexB) ) {
 			String[] userValues = date.split("/");
 			// save in temporary variable to perform operations
@@ -68,7 +67,7 @@ public class Date implements Comparable<Date>{
 				int[] monthsWith31Days = {1, 3, 5, 7, 8, 10, 12};
 				// throw exception if day > 31
 				for (int i : monthsWith31Days) {
-					if (day > 31) { throw new IllegalArgumentException(errorMessage); }
+					if (i > 31) { throw new IllegalArgumentException(errorMessage); }
 				}
 			}
 		}		
@@ -76,7 +75,7 @@ public class Date implements Comparable<Date>{
 		else {	throw new IllegalArgumentException(errorMessage); }
 	}
 	/**
-	 * This constructor takes the numerical values of the date. The valid values for 
+	 * Constructs the numerical values of the date. The valid values for 
 	 * each part of the date are:
 	 * @param month : 1 - 12 (inclusive)
 	 * @param day : 31 for January, March, May, July, August, October and December
@@ -91,8 +90,8 @@ public class Date implements Comparable<Date>{
 		this(month + "/" + day + "/" + year);
 	}
 	/**
-	 * The function checks if the given year is a leap year. 
-	 * This is important for the month February and is only 
+	 * Checks if the given year is a leap year. 
+	 * This is important for the month February thus it is only 
 	 * called when checking dates with month "02".
 	 * Mathematically, a leap year is a multiple of 400 and 
 	 * a multiple of 4 but not 100.
@@ -121,79 +120,69 @@ public class Date implements Comparable<Date>{
 		return (number >= lower && number <= upper);
 	}
 	/**
-	 *@param
-	 *@return
+	 * Compares two Date objects based on the equals() method. 
+	 * @see equals()
+	 *@param anotherDate Date instance
+	 *@return 0 if equal i.e month, date and year are the same
+	 *        1 if this date instance is earlier than anotherDate
+	 *       -1 if this date instance is later than anotherDate
 	 */
 	@Override
 	public int compareTo(Date anotherDate) throws ClassCastException {
 		if ( !(anotherDate instanceof Date) ) {
 			throw new ClassCastException("The input parameter must be a date.");
 		}
-		if (this != null && anotherDate == null) { return 1; }
-		else { return -1; }
 		if (this == anotherDate) { return 0; }
-		if (this.month == anotherDate.getMonth() && this.day == anotherDate.getDay() 
-				&& this.year == anotherDate.getYear() ) { return 0; }
-		if ( this.year > anotherDate.getYear()) {
-		
-		return;
-		
+		if (this != null && anotherDate == null) { return 1; }
+		if (this == null && anotherDate != null){ return -1; }
+		if ( this.year == anotherDate.getYear()) { 
+			if ( this.month == anotherDate.getMonth() ) {
+				if ( this.day == anotherDate.getDay() ) {
+					return 0;
+				}
+				else if ( this.day < anotherDate.getDay() ) { return -1; }
+				else { return 1; }
+			}
+			else if ( this.month < anotherDate.getMonth() ) { return -1; }
+			else { return 1; }
+		}
+		else if ( this.year < anotherDate.getYear() ) { return -1; }
+		else { return 1; }	
 	}
 	/**
-	 * This function prints the date in the format MM/DD/YYYY. 
+	 * This function prints the date object.
 	 * Years in YY format are already modified in both constructors.
+	 * @return Date object in the format MM/DD/YYYY.
 	 */
 	@Override
 	public String toString () {
+		if (month < 10 ) {
+			return "0" + month + "/" + day + "/" + year;
+		}
+		else if (day < 10) {
+			return month + "/" + "0" +  day + "/" + year;
+		}
+		else if (month < 10 && day < 10) {
+			return "0" + month + "/" + "0" + day + "/" + year;
+		}
 		return month + "/" + day + "/" + year;
 	}
 	/**
 	 * @return the day
 	 */
-	private int getDay() {
+	public int getDay() {
 		return this.day;
 	}
 	/**
 	 * @return the month
 	 */
-	private int getMonth() {
+	public int getMonth() {
 		return this.month;
 	}
 	/**
 	 * @return the year
 	 */
-	private int getYear() {
+	public int getYear() {
 		return this.year;
 	}
-
 } 
-
-//ArrayList<Integer> monthsWith30Days = new ArrayList<Integer>();
-//monthsWith30Days.add(4);
-//monthsWith30Days.add(6);
-//monthsWith30Days.add(9);
-//monthsWith30Days.add(11);
-
-/**
- * This function parses the date string to extract month, date and year
- * and saves each part of it into Date class's month, date and year values.
- * @param String date from Date(String) constructor
- */
-//public void parse() {
-//	String[] userValues = date.split("/");
-//	this.month = Integer.parseInt(userValues[0]);
-//	this.day = Integer.parseInt(userValues[1]);
-//	this.year = Integer.parseInt(userValues[2]);
-//}
-
-//String MM = "";
-//String DD = "";
-//String YYYY = "";
-//if ( month < 10 )	  MM = "0" + month;
-//else if ( day < 10 )  DD = "0" + day;
-//else if ( inRange(year, 0, 25) )
-//	YYYY = "20" + year;	
-//else 
-//	MM = "" + month;
-//	DD = "" + day;
-//	YYYY = "" + year;
